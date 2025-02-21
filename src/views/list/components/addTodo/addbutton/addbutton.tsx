@@ -2,17 +2,20 @@ import { useState } from "react";
 import Button from "@mui/material/Button";
 import TodoForm from "../addForm/addForm";
 
+interface Todo {
+  id: number;
+  todo: string;
+  completed: boolean;
+  userId: number;
+}
+
 interface TodoInputProps {
   task: string;
   setTask: React.Dispatch<React.SetStateAction<string>>;
-  setTodos: React.Dispatch<
-    React.SetStateAction<
-      { id: number; todo: string; completed: boolean; userId: number }[]
-    >
-  >;
+  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
 }
 
-const TodoInput = ({ task, setTask, setTodos }) => {
+const TodoInput: React.FC<TodoInputProps> = ({ task, setTask, setTodos }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleVisibility = () => setIsVisible((prev) => !prev);
@@ -26,7 +29,7 @@ const TodoInput = ({ task, setTask, setTodos }) => {
       body: JSON.stringify({ todo: task, completed: false, userId: 5 }),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then((data: Todo) => {
         setTodos((prev) => [...prev, data]);
         setTask("");
         setIsVisible(false);

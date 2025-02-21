@@ -1,3 +1,5 @@
+import "cypress";
+
 describe("Todo unittesting", () => {
   it("Adds todo", () => {
     cy.window().then((window) => {

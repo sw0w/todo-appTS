@@ -1,22 +1,28 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import ProfileView from "./ProfileView";
 import { vi } from "vitest";
+import ProfileView from "./profileView";
 
 beforeEach(() => {
   localStorage.setItem("Token", "mockToken");
   localStorage.setItem("id", "1");
 
   global.fetch = vi.fn(() =>
-    Promise.resolve({
-      json: () =>
-        Promise.resolve({
+    Promise.resolve(
+      new Response(
+        JSON.stringify({
           id: 1,
           username: "aaaaaaaaa",
           email: "aa@aa.aa",
           image: "https://via.placeholder.com/150",
         }),
-    })
+        {
+          status: 200,
+          statusText: "OK",
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+    )
   );
 });
 

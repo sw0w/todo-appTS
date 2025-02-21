@@ -4,9 +4,18 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { setupServer } from "msw/node";
 import { http, HttpResponse } from "msw";
 import { BrowserRouter } from "react-router-dom";
-import TodoList from "../list/list";
+import { ItemProps } from "./item";
 import userEvent from "@testing-library/user-event";
-import { isEditable } from "@testing-library/user-event/dist/cjs/utils/index.js";
+
+const itemProps: ItemProps = {
+  toggleEdit: vi.fn(),
+  settemptext: vi.fn(),
+  save: vi.fn(),
+  back: vi.fn(),
+  DeleteTodo: vi.fn(),
+  temporarytext: [{ id: 1, text: "aaa" }],
+  todo: { id: 1, todo: "fly a plane", completed: false, isEditing: false },
+};
 
 export const server = setupServer(
   http.get("https://dummyjson.com/todos", async () => {
@@ -24,28 +33,11 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-describe("list tests", () => {
+describe("item tests", () => {
   it("it should render the item correctly", () => {
-    const toggleEdit = vi.fn();
-    const settemptext = vi.fn();
-    const save = vi.fn();
-    const back = vi.fn();
-    const DeleteTodo = vi.fn();
-    const temporarytext = vi.fn();
-
-    const todo = { id: 1, todo: "fly a plane", completed: false };
-
     render(
       <BrowserRouter>
-        <TodoItem
-          todo={todo}
-          toggleEdit={toggleEdit}
-          temporarytext={temporarytext}
-          settemptext={settemptext}
-          save={save}
-          back={back}
-          DeleteTodo={DeleteTodo}
-        />
+        <TodoItem {...itemProps} />
       </BrowserRouter>
     );
 
@@ -53,12 +45,6 @@ describe("list tests", () => {
   });
 
   it("should show the editable field and allow editing when clicked on the text", async () => {
-    const toggleEdit = vi.fn();
-    const settemptext = vi.fn();
-    const save = vi.fn();
-    const back = vi.fn();
-    const DeleteTodo = vi.fn();
-
     let todo = {
       id: 1,
       todo: "fly a plane",
@@ -68,15 +54,7 @@ describe("list tests", () => {
 
     render(
       <BrowserRouter>
-        <TodoItem
-          todo={todo}
-          toggleEdit={toggleEdit}
-          temporarytext={[]}
-          settemptext={settemptext}
-          save={save}
-          back={back}
-          DeleteTodo={DeleteTodo}
-        />
+        <TodoItem {...itemProps} todo={todo} temporarytext={[]} />
       </BrowserRouter>
     );
 
@@ -89,18 +67,11 @@ describe("list tests", () => {
     const saveButton = screen.getByTestId("save");
     fireEvent.click(saveButton);
 
-    expect(settemptext).toHaveBeenCalled();
-    expect(save).toHaveBeenCalledWith(todo.id);
+    expect(itemProps.settemptext).toHaveBeenCalled();
+    expect(itemProps.save).toHaveBeenCalledWith(todo.id);
   });
 
   it("should delete a todo", async () => {
-    const toggleEdit = vi.fn();
-    const settemptext = vi.fn();
-    const save = vi.fn();
-    const back = vi.fn();
-    const DeleteTodo = vi.fn();
-    const temporarytext = vi.fn();
-
     let todos = [
       {
         id: 1,
@@ -117,18 +88,9 @@ describe("list tests", () => {
       },
     ];
 
-    let todo = todos[1];
     render(
       <BrowserRouter>
-        <TodoItem
-          todo={todo}
-          toggleEdit={toggleEdit}
-          temporarytext={temporarytext}
-          settemptext={settemptext}
-          save={save}
-          back={back}
-          DeleteTodo={DeleteTodo}
-        />
+        <TodoItem {...itemProps} todo={todos[1]} />
       </BrowserRouter>
     );
 
@@ -137,31 +99,9 @@ describe("list tests", () => {
   });
 
   it("should test the back button", async () => {
-    const toggleEdit = vi.fn();
-    const settemptext = vi.fn();
-    const save = vi.fn();
-    const back = vi.fn();
-    const DeleteTodo = vi.fn();
-    const temporarytext = vi.fn();
-
-    let todo = {
-      id: 1,
-      todo: "fly a plane",
-      completed: false,
-      isEditing: false,
-    };
-
     render(
       <BrowserRouter>
-        <TodoItem
-          todo={todo}
-          toggleEdit={toggleEdit}
-          temporarytext={temporarytext}
-          settemptext={settemptext}
-          save={save}
-          back={back}
-          DeleteTodo={DeleteTodo}
-        />
+        <TodoItem {...itemProps} />
       </BrowserRouter>
     );
 
@@ -169,26 +109,19 @@ describe("list tests", () => {
 
     fireEvent.click(todotext);
 
-    todo = { ...todo, isEditing: true };
-
     render(
       <BrowserRouter>
         <TodoItem
-          todo={todo}
-          toggleEdit={toggleEdit}
-          temporarytext={temporarytext}
-          settemptext={settemptext}
-          save={save}
-          back={back}
-          DeleteTodo={DeleteTodo}
+          {...itemProps}
+          todo={{ ...itemProps.todo, isEditing: true }}
         />
       </BrowserRouter>
     );
 
-    expect(toggleEdit).toBeCalledWith(todo.id);
+    expect(itemProps.toggleEdit).toBeCalledWith(itemProps.todo.id);
 
     const backButton = screen.getByTestId("save");
     fireEvent.click(backButton);
-    expect(back).toBeCalled;
+    expect(itemProps.back).toBeCalled;
   });
 });

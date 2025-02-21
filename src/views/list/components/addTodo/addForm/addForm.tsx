@@ -2,7 +2,13 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 
-const TodoForm = ({ task, setTask, handleAddToDo }) => {
+type TodoFormProps = {
+  task: string;
+  setTask: (task: string) => void;
+  handleAddToDo: () => void;
+};
+
+const TodoForm = ({ task, setTask, handleAddToDo }: TodoFormProps) => {
   return (
     <Box
       data-testid="textbox"

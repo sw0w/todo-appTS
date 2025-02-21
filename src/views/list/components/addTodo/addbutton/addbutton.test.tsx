@@ -13,15 +13,23 @@ import TodoInput from "./addbutton";
 import { setupServer } from "msw/node";
 import { http, HttpResponse } from "msw";
 
+interface TodoData {
+  todo: string;
+}
+
 export const server = setupServer(
   http.post("https://dummyjson.com/todos/add", async ({ request }) => {
-    const data = await request.json();
-
-    return HttpResponse.json({
-      todo: data.todo,
-      completed: false,
-      userId: 5,
-    });
+    const data = ((await request.json()) as TodoData) || null;
+    if (data) {
+      return HttpResponse.json({
+        todo: data.todo,
+        completed: false,
+        userId: 5,
+      });
+    } else {
+      console.log("Invalid data", data);
+      return HttpResponse.json({ error: "Invalid data" }, { status: 400 });
+    }
   })
 );
 

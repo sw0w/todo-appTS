@@ -1,15 +1,37 @@
 import { Grid } from "@mui/material";
 import TodoItem from "../item/item";
 
+type Todo = {
+  id: number;
+  todo: string;
+  completed: boolean;
+  isEditing?: boolean;
+};
+
+type TemporaryText = {
+  id: number;
+  text: string;
+};
+
+export type TodoListProps = {
+  todos: Todo[];
+  toggleEdit: (id: number) => void;
+  temporarytext?: TemporaryText[];
+  settemptext: (texts: TemporaryText[]) => void;
+  save: (id: number) => void;
+  back: (id: number) => void;
+  DeleteTodo: (id: number) => void;
+};
+
 const TodoList = ({
   todos,
   toggleEdit,
-  temporarytext,
+  temporarytext = [],
   settemptext,
   save,
   back,
   DeleteTodo,
-}) => (
+}: TodoListProps) => (
   <Grid
     container
     spacing={2}

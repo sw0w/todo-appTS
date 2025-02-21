@@ -11,13 +11,18 @@ const Header = () => {
     <Box
       component="header"
       sx={{
+        position: "fixed",
+        top: "10px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: "80%",
+        zIndex: 9999,
         backgroundColor: "#fbfcf7",
         borderRadius: "25px",
         padding: "10px",
         display: "flex",
         justifyContent: "space-between",
         textAlign: "center",
-        width: "80%",
         boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
       }}
     >
@@ -77,20 +82,6 @@ const Header = () => {
               }}
             >
               About
-            </Button>
-          </Link>
-
-          <Link to="/feedback">
-            <Button
-              variant="text"
-              sx={{
-                color: location.pathname === "/feedback" ? "#000" : "#555",
-                fontWeight:
-                  location.pathname === "/feedback" ? "bold" : "normal",
-                textDecoration: "none",
-              }}
-            >
-              Feedback
             </Button>
           </Link>
         </Box>

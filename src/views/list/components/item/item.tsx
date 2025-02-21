@@ -1,6 +1,28 @@
 import { Button, IconButton, TextField, Box } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+type Todo = {
+  id: number;
+  todo: string;
+  completed: boolean;
+  isEditing?: boolean;
+};
+
+type TemporaryText = {
+  id: number;
+  text: string;
+};
+
+export type ItemProps = {
+  todo: Todo;
+  toggleEdit: (id: number) => void;
+  temporarytext?: TemporaryText[];
+  settemptext: (newArray: TemporaryText[]) => void;
+  save: (id: number) => void;
+  back: (id: number) => void;
+  DeleteTodo: (id: number) => void;
+};
+
 const TodoItem = ({
   todo,
   toggleEdit,
@@ -9,7 +31,7 @@ const TodoItem = ({
   save,
   back,
   DeleteTodo,
-}) => {
+}: ItemProps) => {
   return (
     <Box
       sx={{
@@ -26,7 +48,6 @@ const TodoItem = ({
       {todo.isEditing ? (
         <TextField
           data-testid="editfield"
-          size="normal"
           variant="filled"
           fullWidth
           multiline
@@ -45,9 +66,7 @@ const TodoItem = ({
             const tObjectIndex = temporarytext.findIndex(
               (tObject) => tObject.id === todo.id
             );
-            const newArray = Array.isArray(temporarytext)
-              ? [...temporarytext]
-              : [];
+            const newArray = [...temporarytext];
 
             if (tObjectIndex === -1) {
               newArray.push({

@@ -4,6 +4,17 @@ import TodoList from "./list";
 import { setupServer } from "msw/node";
 import { http, HttpResponse } from "msw";
 import { BrowserRouter } from "react-router-dom";
+import { TodoListProps } from "./list";
+
+const listProps: TodoListProps = {
+  todos: [{ id: 1, todo: "fly a plane", completed: false }],
+  toggleEdit: vi.fn(),
+  temporarytext: [{ id: 1, text: "aaa" }],
+  settemptext: vi.fn(),
+  save: vi.fn(),
+  back: vi.fn(),
+  DeleteTodo: vi.fn(),
+};
 
 export const server = setupServer(
   http.get("https://dummyjson.com/todos", async () => {
@@ -23,30 +34,9 @@ afterAll(() => server.close());
 
 describe("list tests", () => {
   it("should render the list of todos", () => {
-    const toggleEdit = vi.fn();
-    const settemptext = vi.fn();
-    const save = vi.fn();
-    const back = vi.fn();
-    const DeleteTodo = vi.fn();
-    const temporarytext = vi.fn();
-
-    const todos = [
-      { id: 1, todo: "fly a plane", completed: false },
-      { id: 2, todo: "ride a motorcycle", completed: true },
-      { id: 3, todo: "roll down a mountain", completed: false },
-    ];
-
     render(
       <BrowserRouter>
-        <TodoList
-          todos={todos}
-          toggleEdit={toggleEdit}
-          temporarytext={temporarytext}
-          settemptext={settemptext}
-          save={save}
-          back={back}
-          DeleteTodo={DeleteTodo}
-        />
+        <TodoList {...listProps} />
       </BrowserRouter>
     );
 

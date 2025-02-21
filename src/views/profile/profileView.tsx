@@ -4,6 +4,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/header";
 
 const ProfileView = () => {
+  useEffect(() => {
+    document.body.style.overflowY = "scroll";
+    document.body.style.scrollbarWidth = "none";
+
+    const style = document.createElement("style");
+    style.innerHTML = "::-webkit-scrollbar { display: none; }";
+    document.head.appendChild(style);
+
+    return () => {
+      document.body.style.overflowY = "auto";
+      document.head.removeChild(style);
+    };
+  }, []);
+
   const { uid } = useParams();
   const navigate = useNavigate();
   const [userData, setUserData] = useState<any>(null);
@@ -32,20 +46,7 @@ const ProfileView = () => {
     return (
       <div>
         <Header />
-        <Box
-          sx={{
-            opacity: 1,
-            position: "absolute",
-            top: "-300px",
-            left: "-50px",
-            width: "2000px",
-            height: "100%",
-            transform: "rotate(10deg)",
-            boxShadow: "0 0 40px rgba(0, 0, 0, 0.2)",
-            backgroundColor: "rgb(232, 231, 231)",
-            zIndex: -2,
-          }}
-        />
+
         <Box
           sx={{
             display: "flex",
