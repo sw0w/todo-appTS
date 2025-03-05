@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material/";
 import { Link, useLocation } from "react-router-dom";
-import Login from "../views/login/login.js";
+import Login from "../views/auth/login/login";
 
 const Header = () => {
   const location = useLocation();

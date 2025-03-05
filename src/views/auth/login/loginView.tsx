@@ -1,6 +1,6 @@
-import Header from "../../components/header";
+import Header from "../../../components/header";
 import { Box, Typography, Container, TextField, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 
@@ -19,21 +19,24 @@ const LoginView = () => {
   let nav = useNavigate();
 
   const handleLogin: SubmitHandler<LoginFormData> = (data) => {
-    console.log("Sending login request...");
-    fetch("https://dummyjson.com/user/login", {
+    console.log("Sending login request with data:", data);
+
+    fetch("http://localhost:5000/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         username: data.username,
         password: data.password,
-        expiresInMins: 30,
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log("Response status:", response.status);
+        return response.json();
+      })
       .then((data) => {
-        console.log(data);
-        if (data.accessToken) {
-          localStorage.setItem("Token", data.accessToken);
+        console.log("Response data:", data);
+        if (data.token) {
+          localStorage.setItem("Token", data.token);
           localStorage.setItem("id", data.id);
           console.log(localStorage);
           nav("/list");
@@ -42,7 +45,8 @@ const LoginView = () => {
         }
       })
       .catch((error) => {
-        console.error("Error, please try again later.", error.message);
+        console.error("Error, please try again later.", error);
+        setError("An error occurred. Please try again later.");
       });
   };
 
@@ -126,6 +130,15 @@ const LoginView = () => {
               {error}
             </Typography>
           )}
+
+          <Box sx={{ marginTop: 2 }}>
+            <Typography variant="body2">
+              Don't have an account?{" "}
+              <Link to="/register" style={{ textDecoration: "none" }}>
+                <Button variant="text">Register</Button>
+              </Link>
+            </Typography>
+          </Box>
         </Box>
       </Container>
     </div>

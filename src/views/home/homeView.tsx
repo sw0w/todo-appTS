@@ -2,10 +2,17 @@ import Header from "../../components/header";
 import { Box, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import image from "../../assets/image.png";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const HomeView = () => {
+  const [message, setMessage] = useState("");
+
   useEffect(() => {
+    fetch("http://localhost:5000/")
+      .then((res) => res.text())
+      .then((data) => setMessage(data))
+      .catch((err) => console.error("Error fetching data:", err));
+
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "scroll";
@@ -64,7 +71,7 @@ const HomeView = () => {
             marginBottom: "20px",
           }}
         >
-          Organize your tasks easily.
+          {message}
         </Typography>
 
         <Box

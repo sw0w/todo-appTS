@@ -4,13 +4,17 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "node",
-    "esModuleInterop": true,
     "target": "ESNext",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
-    "types": ["cypress"]
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "types": ["cypress", "cors"]
   }
 }
