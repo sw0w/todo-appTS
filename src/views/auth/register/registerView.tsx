@@ -15,36 +15,35 @@ const RegisterView = () => {
     register,
     handleSubmit,
     formState: { errors },
-    watch, // Destructure watch here
+    watch,
   } = useForm<RegisterFormData>();
   const [error, setError] = useState("");
   let nav = useNavigate();
 
   const handleRegister: SubmitHandler<RegisterFormData> = (data) => {
     console.log("Sending registration request...");
-    fetch("https://dummyjson.com/user/register", {
+
+    fetch("http://localhost:5000/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         username: data.username,
         password: data.password,
-        confirmPassword: data.confirmPassword,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        if (data.accessToken) {
-          localStorage.setItem("Token", data.accessToken);
-          localStorage.setItem("id", data.id);
-          console.log(localStorage);
+        if (data.token) {
+          localStorage.setItem("Token", data.token);
+          console.log("User ID:", data.userId);
           nav("/list");
         } else {
-          setError("Registration failed, please try again.");
+          setError(data.message || "Registration failed, please try again.");
         }
       })
       .catch((error) => {
         console.error("Error, please try again later.", error.message);
+        setError("Error registering user. Please try again later.");
       });
   };
 
@@ -78,7 +77,7 @@ const RegisterView = () => {
 
           <form onSubmit={handleSubmit(handleRegister)}>
             <TextField
-              inputProps={{ "data-testid": "username-input" }}
+              data-testid="username-input"
               label="Username"
               variant="outlined"
               fullWidth
@@ -95,7 +94,7 @@ const RegisterView = () => {
             />
 
             <TextField
-              inputProps={{ "data-testid": "password-input" }}
+              data-testid="password-input"
               label="Password"
               variant="outlined"
               type="password"
@@ -113,7 +112,7 @@ const RegisterView = () => {
             />
 
             <TextField
-              inputProps={{ "data-testid": "confirm-password-input" }}
+              data-testid="confirm-password-input"
               label="Confirm Password"
               variant="outlined"
               type="password"

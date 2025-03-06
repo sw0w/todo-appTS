@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-// import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
@@ -57,9 +57,9 @@ app.post("/login", async (req: Request, res: Response): Promise<any> => {
     console.log(`Stored password: ${user.password}`);
     console.log(`Received password: ${password}`);
 
-    // const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
 
-    const isMatch = password === user.password; // testing and only for testing.
+    // const isMatch = password === user.password; // testing and only for testing.
     console.log(`Password match: ${isMatch}`);
 
     if (!isMatch) {
@@ -72,10 +72,44 @@ app.post("/login", async (req: Request, res: Response): Promise<any> => {
       { expiresIn: "1h" }
     );
 
-    res.status(200).json({ token });
+    res.status(200).json({ token, id: user._id });
   } catch (err) {
     console.error("Error logging in:", err);
     res.status(500).json({ message: "Error logging in" });
+  }
+});
+
+app.post("/register", async (req: Request, res: Response): Promise<any> => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res
+      .status(400)
+      .json({ message: "Username and password are required" });
+  }
+
+  try {
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ message: "Username already taken" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({ username, password: hashedPassword });
+    await newUser.save();
+
+    /* const token = jwt.sign(
+      { userId: newUser._id, username: newUser.username },
+      process.env.JWT_SECRET as string,
+      { expiresIn: "1h" }
+    );
+
+    res.status(201).json({ token }); */
+    res.status(201).json({ message: "Registered, please log in." });
+  } catch (err) {
+    console.error("Error during registragion: ", err);
+    res.status(500).json({ message: "Error registering user" });
   }
 });
 

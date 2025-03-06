@@ -79,7 +79,7 @@ const LoginView = () => {
 
           <form onSubmit={handleSubmit(handleLogin)}>
             <TextField
-              inputProps={{ "data-testid": "username-input" }}
+              data-testid="username-input"
               label="Username"
               variant="outlined"
               fullWidth
@@ -96,7 +96,7 @@ const LoginView = () => {
             />
 
             <TextField
-              inputProps={{ "data-testid": "password-input" }}
+              data-testid="password-input"
               label="Password"
               variant="outlined"
               type="password"
