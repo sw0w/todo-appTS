@@ -3,10 +3,9 @@ import Button from "@mui/material/Button";
 import TodoForm from "../addForm/addForm";
 
 interface Todo {
-  id: number;
+  _id: string;
   todo: string;
   completed: boolean;
-  userId: number;
 }
 
 interface TodoInputProps {
@@ -20,21 +19,37 @@ const TodoInput: React.FC<TodoInputProps> = ({ task, setTask, setTodos }) => {
 
   const toggleVisibility = () => setIsVisible((prev) => !prev);
 
-  const handleAddToDo = () => {
+  const handleAddToDo = async () => {
     if (!task.trim()) return;
 
-    fetch("https://dummyjson.com/todos/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ todo: task, completed: false, userId: 5 }),
-    })
-      .then((res) => res.json())
-      .then((data: Todo) => {
-        setTodos((prev) => [...prev, data]);
-        setTask("");
-        setIsVisible(false);
-      })
-      .catch((err) => console.error("Error adding todo:", err));
+    try {
+      const token = localStorage.getItem("Token");
+      if (!token) {
+        console.error("User not authenticated");
+        return;
+      }
+
+      const res = await fetch("http://localhost:5000/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${token}`,
+        },
+        body: JSON.stringify({ todo: task }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to add todo");
+      }
+
+      const data: { todos: Todo[] } = await res.json();
+      setTodos(data.todos);
+
+      setTask("");
+      setIsVisible(false);
+    } catch (err) {
+      console.error("Error adding todo:", err);
+    }
   };
 
   return (

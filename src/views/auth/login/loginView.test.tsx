@@ -4,6 +4,7 @@ import LoginView from "./loginView";
 import "@testing-library/jest-dom";
 import { setupServer } from "msw/node";
 import { http, HttpResponse } from "msw";
+import userEvent from "@testing-library/user-event";
 
 interface data {
   username: string;
@@ -63,13 +64,8 @@ test("failed login shows error message", async () => {
     </BrowserRouter>
   );
 
-  fireEvent.change(screen.getByTestId("username-input"), {
-    target: { value: wronguser },
-  });
-  fireEvent.change(screen.getByTestId("password-input"), {
-    target: { value: wrongpass },
-  });
-
+  await userEvent.type(screen.getByTestId("username-input"), user);
+  await userEvent.type(screen.getByTestId("password-input"), pass);
   fireEvent.click(screen.getByTestId("login-button"));
 
   await waitFor(() => {

@@ -13,17 +13,17 @@ const itemProps: ItemProps = {
   save: vi.fn(),
   back: vi.fn(),
   DeleteTodo: vi.fn(),
-  temporarytext: [{ id: 1, text: "aaa" }],
-  todo: { id: 1, todo: "fly a plane", completed: false, isEditing: false },
+  temporarytext: [{ _id: 1, text: "aaa" }],
+  todo: { _id: 1, todo: "fly a plane", completed: false, isEditing: false },
 };
 
 export const server = setupServer(
   http.get("https://dummyjson.com/todos", async () => {
     return HttpResponse.json({
       todos: [
-        { id: 1, todo: "fly a plane", completed: false },
-        { id: 2, todo: "ride a motorcycle", completed: true },
-        { id: 3, todo: "roll down a mountain", completed: false },
+        { _id: 1, todo: "fly a plane", completed: false },
+        { _id: 2, todo: "ride a motorcycle", completed: true },
+        { _id: 3, todo: "roll down a mountain", completed: false },
       ],
     });
   })
@@ -46,7 +46,7 @@ describe("item tests", () => {
 
   it("should show the editable field and allow editing when clicked on the text", async () => {
     let todo = {
-      id: 1,
+      _id: 1,
       todo: "fly a plane",
       completed: false,
       isEditing: true,
@@ -68,20 +68,20 @@ describe("item tests", () => {
     fireEvent.click(saveButton);
 
     expect(itemProps.settemptext).toHaveBeenCalled();
-    expect(itemProps.save).toHaveBeenCalledWith(todo.id);
+    expect(itemProps.save).toHaveBeenCalledWith(todo._id);
   });
 
   it("should delete a todo", async () => {
     let todos = [
       {
-        id: 1,
+        _id: 1,
         todo: "fly a plane",
         completed: false,
         isEditing: false,
       },
 
       {
-        id: 2,
+        _id: 2,
         todo: "go to the moon",
         completed: false,
         isEditing: false,
@@ -118,7 +118,7 @@ describe("item tests", () => {
       </BrowserRouter>
     );
 
-    expect(itemProps.toggleEdit).toBeCalledWith(itemProps.todo.id);
+    expect(itemProps.toggleEdit).toBeCalledWith(itemProps.todo._id);
 
     const backButton = screen.getByTestId("save");
     fireEvent.click(backButton);

@@ -24,29 +24,51 @@ const ProfileView = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("Token");
+    console.log("Token retrieved from localStorage:", token);
+
     if (!token) {
+      console.log("No token found, redirecting to login...");
       navigate("/login");
       return;
     }
 
     if (uid) {
-      fetch(`https://dummyjson.com/users/${uid}`)
+      console.log(`Fetching data for user ID: ${uid}`);
+
+      fetch(`http://localhost:5000/users/${uid}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
         .then((res) => res.json())
-        .then((data) => setUserData(data))
-        .catch((error) => console.log(error));
+        .then((data) => {
+          console.log("User data received:", data);
+          setUserData(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
     }
   }, [navigate, uid]);
 
   const handleLogout = () => {
+    console.log("Logging out...");
     localStorage.clear();
     navigate("/login");
   };
+
+  if (userData === null) {
+    console.log("Loading user data...");
+    return <div>Loading...</div>;
+  }
+
+  console.log("User data in state:", userData);
 
   if (uid === localStorage.getItem("id")) {
     return (
       <div>
         <Header />
-
         <Box
           sx={{
             display: "flex",
@@ -67,33 +89,6 @@ const ProfileView = () => {
               paddingTop: "60px",
             }}
           >
-            <Box
-              sx={{
-                position: "absolute",
-                top: "-50px",
-                left: "50%",
-                transform: "translateX(-50%)",
-                width: "100px",
-                height: "100px",
-                borderRadius: "50%",
-                backgroundColor: "white",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                boxShadow: "0 0 8px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              <img
-                src={userData?.image || "https://via.placeholder.com/150"}
-                alt="Profile"
-                style={{
-                  width: "80px",
-                  height: "80px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                }}
-              />
-            </Box>
             <Typography
               variant="body2"
               sx={{ fontSize: "0.8rem", color: "#555", marginBottom: 1 }}
@@ -101,17 +96,17 @@ const ProfileView = () => {
               Username
             </Typography>
             <Typography variant="h6" sx={{ paddingBottom: 2 }}>
-              {userData?.username}
+              {userData.username || "No username found"}{" "}
             </Typography>
 
             <Typography
               variant="body2"
               sx={{ fontSize: "0.8rem", color: "#555", marginBottom: 1 }}
             >
-              Email
+              Userid
             </Typography>
             <Typography variant="h6" sx={{ paddingBottom: 2 }}>
-              {userData?.email}
+              {userData._id || "No username found"}{" "}
             </Typography>
 
             <Button
@@ -127,6 +122,7 @@ const ProfileView = () => {
       </div>
     );
   } else {
+    console.log("Permission denied: Accessing someone else's profile.");
     return (
       <div>
         <Header />

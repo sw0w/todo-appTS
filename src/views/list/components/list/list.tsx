@@ -47,12 +47,8 @@ const TodoList = ({
       <Grid
         item
         xs="auto"
-        key={todo.id}
-        sx={{
-          position: "relative",
-          display: "flex",
-          justifyContent: "center",
-        }}
+        key={todo._id}
+        sx={{ position: "relative", display: "flex", justifyContent: "center" }}
       >
         <TodoItem
           todo={todo}

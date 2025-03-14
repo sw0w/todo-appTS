@@ -2,25 +2,25 @@ import { Button, IconButton, TextField, Box } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 type Todo = {
-  id: number;
+  _id: string;
   todo: string;
   completed: boolean;
   isEditing?: boolean;
 };
 
 type TemporaryText = {
-  id: number;
+  id: string;
   text: string;
 };
 
 export type ItemProps = {
   todo: Todo;
-  toggleEdit: (id: number) => void;
+  toggleEdit: (id: string) => void;
   temporarytext?: TemporaryText[];
   settemptext: (newArray: TemporaryText[]) => void;
-  save: (id: number) => void;
-  back: (id: number) => void;
-  DeleteTodo: (id: number) => void;
+  save: (id: string) => void;
+  back: (id: string) => void;
+  DeleteTodo: (id: string) => void;
 };
 
 const TodoItem = ({
@@ -54,7 +54,7 @@ const TodoItem = ({
           rows={2}
           value={
             (Array.isArray(temporarytext)
-              ? temporarytext.find((item) => item.id === todo.id)?.text
+              ? temporarytext.find((item) => item.id === todo._id)?.text
               : undefined) || todo.todo
           }
           sx={{
@@ -64,18 +64,18 @@ const TodoItem = ({
           }}
           onChange={(e) => {
             const tObjectIndex = temporarytext.findIndex(
-              (tObject) => tObject.id === todo.id
+              (tObject) => tObject.id === todo._id
             );
             const newArray = [...temporarytext];
 
             if (tObjectIndex === -1) {
               newArray.push({
-                id: todo.id,
+                id: todo._id,
                 text: e.target.value,
               });
             } else {
               newArray[tObjectIndex] = {
-                id: todo.id,
+                id: todo._id,
                 text: e.target.value,
               };
             }
@@ -83,7 +83,7 @@ const TodoItem = ({
           }}
         />
       ) : (
-        <p onClick={() => toggleEdit(todo.id)}>{todo.todo}</p>
+        <p onClick={() => toggleEdit(todo._id)}>{todo.todo}</p>
       )}
 
       <IconButton
@@ -93,7 +93,7 @@ const TodoItem = ({
           bottom: 10,
           right: 10,
         }}
-        onClick={() => DeleteTodo(todo.id)}
+        onClick={() => DeleteTodo(todo._id)}
       >
         <DeleteIcon />
       </IconButton>
@@ -109,7 +109,7 @@ const TodoItem = ({
               bottom: 10,
               right: 55,
             }}
-            onClick={() => save(todo.id)}
+            onClick={() => save(todo._id)}
           >
             save
           </Button>
@@ -122,7 +122,7 @@ const TodoItem = ({
               bottom: 10,
               right: 130,
             }}
-            onClick={() => back(todo.id)}
+            onClick={() => back(todo._id)}
           >
             back
           </Button>

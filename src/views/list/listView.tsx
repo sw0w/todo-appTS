@@ -39,32 +39,89 @@ const ListView = () => {
   useEffect(() => {
     async function fetchTodos() {
       try {
-        const response = await fetch("https://dummyjson.com/todos");
+        const token = localStorage.getItem("Token");
+        if (!token) {
+          console.error("No token found, redirecting...");
+          navigate("/login");
+          return;
+        }
+
+        const response = await fetch("http://localhost:5000/todos/", {
+          method: "GET",
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          console.error("Failed to fetch todos");
+          return;
+        }
+
         const data = await response.json();
+        console.log(data);
         setTodos(data.todos);
       } catch (error) {
         console.error("Error fetching todos:", error);
       }
     }
+
     fetchTodos();
   }, []);
 
-  const toggleEdit = (id: number) => {
+  const toggleEdit = (id: string) => {
+    console.log("Toggle Edit ID:", id);
     setTodos((prev: Todo[]) =>
-      prev.map((todo) =>
-        todo.id === id ? { ...todo, isEditing: !todo.isEditing } : todo
-      )
+      prev.map((todo) => {
+        const todoId = todo._id ? todo._id.toString() : null;
+
+        if (todoId === id) {
+          return { ...todo, isEditing: !todo.isEditing };
+        }
+
+        return todo;
+      })
     );
   };
 
-  const save = (id: number) => {
+  const save = async (id: string) => {
     const temp = temporarytext.find((item) => item.id === id);
     if (temp) {
-      setTodos((prev) =>
-        prev.map((todo) =>
-          todo.id === id ? { ...todo, todo: temp.text, isEditing: false } : todo
-        )
-      );
+      try {
+        const token = localStorage.getItem("Token");
+        if (!token) {
+          console.error("No token found, redirecting...");
+          navigate("/login");
+          return;
+        }
+
+        const response = await fetch(`http://localhost:5000/todos/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`,
+          },
+          body: JSON.stringify({
+            todo: temp.text,
+            completed: false,
+          }),
+        });
+
+        if (!response.ok) {
+          console.error("Failed to save todo to the server.");
+          return;
+        }
+
+        setTodos((prev) =>
+          prev.map((todo) =>
+            todo._id === id
+              ? { ...todo, todo: temp.text, isEditing: false }
+              : todo
+          )
+        );
+      } catch (error) {
+        console.error("Error saving todo:", error);
+      }
     }
   };
 
@@ -76,13 +133,32 @@ const ListView = () => {
     );
   };
 
-  const DeleteTodo = (id: number) => {
-    fetch(`https://dummyjson.com/todos/${id}`, { method: "DELETE" })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.isDeleted) {
-          setTodos((prev) => prev.filter((todo) => todo.id !== id));
+  const deleteTodo = (id: string) => {
+    const token = localStorage.getItem("Token");
+    if (!token) {
+      console.error("No token found, redirecting...");
+      navigate("/login");
+      return;
+    }
+
+    fetch(`http://localhost:5000/todos/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to delete todo");
         }
+        return response.json();
+      })
+      .then((data) => {
+        setTodos((prev) => prev.filter((todo) => todo._id !== id));
+      })
+      .catch((error) => {
+        console.error("Failed to delete todo from the server:", error);
       });
   };
 
@@ -105,7 +181,7 @@ const ListView = () => {
           settemptext={settemptext}
           save={save}
           back={back}
-          DeleteTodo={DeleteTodo}
+          DeleteTodo={deleteTodo}
         />
       </Box>
     </>
