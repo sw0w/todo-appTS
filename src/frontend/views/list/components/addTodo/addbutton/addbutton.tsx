@@ -6,6 +6,7 @@ interface Todo {
   _id: string;
   todo: string;
   completed: boolean;
+  userId: number;
 }
 
 interface TodoInputProps {

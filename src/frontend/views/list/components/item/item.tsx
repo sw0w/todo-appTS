@@ -1,26 +1,15 @@
 import { Button, IconButton, TextField, Box } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-
-type Todo = {
-  _id: string;
-  todo: string;
-  completed: boolean;
-  isEditing?: boolean;
-};
-
-type TemporaryText = {
-  id: string;
-  text: string;
-};
+import { Todo, TemporaryText } from "../../../../types/todotype";
 
 export type ItemProps = {
   todo: Todo;
-  toggleEdit: (id: string) => void;
+  toggleEdit: (_id: string) => void;
   temporarytext?: TemporaryText[];
   settemptext: (newArray: TemporaryText[]) => void;
-  save: (id: string) => void;
-  back: (id: string) => void;
-  DeleteTodo: (id: string) => void;
+  save: (_id: string) => void;
+  back: (_id: string) => void;
+  DeleteTodo: (_id: string) => void;
 };
 
 const TodoItem = ({
@@ -54,7 +43,7 @@ const TodoItem = ({
           rows={2}
           value={
             (Array.isArray(temporarytext)
-              ? temporarytext.find((item) => item.id === todo._id)?.text
+              ? temporarytext.find((item) => item._id === todo._id)?.text
               : undefined) || todo.todo
           }
           sx={{
@@ -64,18 +53,18 @@ const TodoItem = ({
           }}
           onChange={(e) => {
             const tObjectIndex = temporarytext.findIndex(
-              (tObject) => tObject.id === todo._id
+              (tObject) => tObject._id === todo._id
             );
             const newArray = [...temporarytext];
 
             if (tObjectIndex === -1) {
               newArray.push({
-                id: todo._id,
+                _id: todo._id,
                 text: e.target.value,
               });
             } else {
               newArray[tObjectIndex] = {
-                id: todo._id,
+                _id: todo._id,
                 text: e.target.value,
               };
             }

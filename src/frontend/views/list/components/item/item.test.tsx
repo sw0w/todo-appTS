@@ -13,12 +13,18 @@ const itemProps: ItemProps = {
   save: vi.fn(),
   back: vi.fn(),
   DeleteTodo: vi.fn(),
-  temporarytext: [{ _id: 1, text: "aaa" }],
-  todo: { _id: 1, todo: "fly a plane", completed: false, isEditing: false },
+  temporarytext: [{ _id: "1", text: "aaa" }],
+  todo: {
+    _id: "1",
+    todo: "fly a plane",
+    completed: false,
+    isEditing: false,
+    userId: 1,
+  },
 };
 
 export const server = setupServer(
-  http.get("https://dummyjson.com/todos", async () => {
+  http.get("http://localhost:5000/todos", async () => {
     return HttpResponse.json({
       todos: [
         { _id: 1, todo: "fly a plane", completed: false },
@@ -46,10 +52,11 @@ describe("item tests", () => {
 
   it("should show the editable field and allow editing when clicked on the text", async () => {
     let todo = {
-      _id: 1,
+      _id: "1",
       todo: "fly a plane",
       completed: false,
       isEditing: true,
+      userId: 1,
     };
 
     render(
@@ -74,17 +81,19 @@ describe("item tests", () => {
   it("should delete a todo", async () => {
     let todos = [
       {
-        _id: 1,
+        _id: "1",
         todo: "fly a plane",
         completed: false,
         isEditing: false,
+        userId: 1,
       },
 
       {
-        _id: 2,
+        _id: "2",
         todo: "go to the moon",
         completed: false,
         isEditing: false,
+        userId: 1,
       },
     ];
 

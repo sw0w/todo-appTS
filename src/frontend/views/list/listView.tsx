@@ -3,21 +3,12 @@ import { Box } from "@mui/material";
 import Header from "../../components/header";
 import TodoInput from "./components/addTodo/addbutton/addbutton";
 import TodoList from "./components/list/list";
-
-type Todo = {
-  id: number;
-  todo: string;
-  completed: boolean;
-  isEditing?: boolean;
-  userId: number;
-};
-
-type TemporaryText = {
-  id: number;
-  text: string;
-};
+import { useNavigate } from "react-router-dom";
+import { Todo, TemporaryText } from "../../types/todotype";
 
 const ListView = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     document.body.style.overflowY = "scroll";
     document.body.style.scrollbarWidth = "none";
@@ -60,7 +51,7 @@ const ListView = () => {
 
         const data = await response.json();
         console.log(data);
-        setTodos(data.todos);
+        setTodos(data.todos as Todo[]);
       } catch (error) {
         console.error("Error fetching todos:", error);
       }
@@ -69,13 +60,13 @@ const ListView = () => {
     fetchTodos();
   }, []);
 
-  const toggleEdit = (id: string) => {
-    console.log("Toggle Edit ID:", id);
+  const toggleEdit = (_id: string) => {
+    console.log("Toggle Edit ID:", _id);
     setTodos((prev: Todo[]) =>
       prev.map((todo) => {
         const todoId = todo._id ? todo._id.toString() : null;
 
-        if (todoId === id) {
+        if (todoId === _id) {
           return { ...todo, isEditing: !todo.isEditing };
         }
 
@@ -84,8 +75,8 @@ const ListView = () => {
     );
   };
 
-  const save = async (id: string) => {
-    const temp = temporarytext.find((item) => item.id === id);
+  const save = async (_id: string) => {
+    const temp = temporarytext.find((item) => item._id === _id);
     if (temp) {
       try {
         const token = localStorage.getItem("Token");
@@ -95,7 +86,7 @@ const ListView = () => {
           return;
         }
 
-        const response = await fetch(`http://localhost:5000/todos/${id}`, {
+        const response = await fetch(`http://localhost:5000/todos/${_id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -114,7 +105,7 @@ const ListView = () => {
 
         setTodos((prev) =>
           prev.map((todo) =>
-            todo._id === id
+            todo._id === _id
               ? { ...todo, todo: temp.text, isEditing: false }
               : todo
           )
@@ -125,15 +116,15 @@ const ListView = () => {
     }
   };
 
-  const back = (id: number) => {
+  const back = (_id: string) => {
     setTodos((prev) =>
       prev.map((todo) =>
-        todo.id === id ? { ...todo, isEditing: false } : todo
+        todo._id === _id ? { ...todo, isEditing: false } : todo
       )
     );
   };
 
-  const deleteTodo = (id: string) => {
+  const deleteTodo = (_id: string) => {
     const token = localStorage.getItem("Token");
     if (!token) {
       console.error("No token found, redirecting...");
@@ -141,7 +132,7 @@ const ListView = () => {
       return;
     }
 
-    fetch(`http://localhost:5000/todos/${id}`, {
+    fetch(`http://localhost:5000/todos/${_id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -154,8 +145,8 @@ const ListView = () => {
         }
         return response.json();
       })
-      .then((data) => {
-        setTodos((prev) => prev.filter((todo) => todo._id !== id));
+      .then(() => {
+        setTodos((prev) => prev.filter((todo) => todo._id !== _id));
       })
       .catch((error) => {
         console.error("Failed to delete todo from the server:", error);

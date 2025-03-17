@@ -1,5 +1,4 @@
 import request from "supertest";
-import User from "./models/user";
 import app from "./app";
 
 describe.skip("Todo API", () => {

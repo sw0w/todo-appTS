@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-import PrivateRoute from "./components/PrivateRoute";
-import HomeView from "./views/home/homeView";
-import AboutView from "./views/about/aboutView";
-import ListView from "./views/list/listView";
-import ContactView from "./views/contactus/contactView";
-import LoginView from "./views/auth/login/loginView";
-import ProfileView from "./views/profile/profileView";
-import RegisterView from "./views/auth/register/registerView";
+import PrivateRoute from "./frontend/components/PrivateRoute";
+import HomeView from "./frontend/views/home/homeView";
+import AboutView from "./frontend/views/about/aboutView";
+import ListView from "./frontend/views/list/listView";
+import ContactView from "./frontend/views/contactus/contactView";
+import LoginView from "./frontend/views/auth/login/loginView";
+import ProfileView from "./frontend/views/profile/profileView";
+import RegisterView from "./frontend/views/auth/register/registerView";
 
 function App() {
   return (

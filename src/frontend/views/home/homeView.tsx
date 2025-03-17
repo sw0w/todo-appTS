@@ -2,15 +2,12 @@ import Header from "../../components/header";
 import { Box, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import image from "../../assets/image.png";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const HomeView = () => {
-  const [message, setMessage] = useState("");
-
   useEffect(() => {
     fetch("http://localhost:5000/")
       .then((res) => res.text())
-      .then((data) => setMessage(data))
       .catch((err) => console.error("Error fetching data:", err));
 
     document.body.style.overflow = "hidden";
@@ -38,6 +35,7 @@ const HomeView = () => {
           position: "absolute",
           zIndex: -1,
           left: "5%",
+          top: "20px",
         }}
       />
 
@@ -71,7 +69,7 @@ const HomeView = () => {
             marginBottom: "20px",
           }}
         >
-          {message}
+          Stay organized with ease
         </Typography>
 
         <Box

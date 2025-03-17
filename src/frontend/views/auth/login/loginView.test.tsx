@@ -27,8 +27,6 @@ export const server = setupServer(
 
 const user = "username";
 const pass = "password123";
-const wronguser = "badusername";
-const wrongpass = "badpassword123";
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
