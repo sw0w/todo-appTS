@@ -3,7 +3,7 @@ import { Box, Typography, Container, TextField, Button } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 interface LoginFormData {
   username: string;
   password: string;
@@ -21,7 +21,7 @@ const LoginView = () => {
   const handleLogin: SubmitHandler<LoginFormData> = (data) => {
     console.log("Sending login request with data:", data);
 
-    fetch("https://todo-appts-production.up.railway.app/login", {
+    fetch(`${apiUrl}login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

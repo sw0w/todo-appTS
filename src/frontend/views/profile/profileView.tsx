@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/header";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 const ProfileView = () => {
   useEffect(() => {
     document.body.style.overflowY = "scroll";
@@ -35,7 +35,7 @@ const ProfileView = () => {
     if (uid) {
       console.log(`Fetching data for user ID: ${uid}`);
 
-      fetch(`https://todo-appts-production.up.railway.app/users/${uid}`, {
+      fetch(`${apiUrl}/users/${uid}`, {
         method: "GET",
         headers: {
           Authorization: `Token ${token}`,

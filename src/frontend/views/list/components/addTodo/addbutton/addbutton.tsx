@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import TodoForm from "../addForm/addForm";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 interface Todo {
   _id: string;
   todo: string;
@@ -30,7 +30,7 @@ const TodoInput: React.FC<TodoInputProps> = ({ task, setTask, setTodos }) => {
         return;
       }
 
-      const res = await fetch("http://localhost:5000/todos/", {
+      const res = await fetch(`${apiUrl}/todos/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

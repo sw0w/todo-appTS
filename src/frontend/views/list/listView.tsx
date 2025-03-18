@@ -5,6 +5,7 @@ import TodoInput from "./components/addTodo/addbutton/addbutton";
 import TodoList from "./components/list/list";
 import { useNavigate } from "react-router-dom";
 import { Todo, TemporaryText } from "../../types/todotype";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const ListView = () => {
   const navigate = useNavigate();
@@ -37,15 +38,12 @@ const ListView = () => {
           return;
         }
 
-        const response = await fetch(
-          "https://todo-appts-production.up.railway.app/todos/",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-          }
-        );
+        const response = await fetch("`${apiUrl}todos/", {
+          method: "GET",
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        });
 
         if (!response.ok) {
           console.error("Failed to fetch todos");
@@ -89,20 +87,17 @@ const ListView = () => {
           return;
         }
 
-        const response = await fetch(
-          `https://todo-appts-production.up.railway.app/todos/${_id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Token ${token}`,
-            },
-            body: JSON.stringify({
-              todo: temp.text,
-              completed: false,
-            }),
-          }
-        );
+        const response = await fetch(`${apiUrl}todos/${_id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`,
+          },
+          body: JSON.stringify({
+            todo: temp.text,
+            completed: false,
+          }),
+        });
 
         if (!response.ok) {
           console.error("Failed to save todo to the server.");
@@ -138,7 +133,7 @@ const ListView = () => {
       return;
     }
 
-    fetch(`https://todo-appts-production.up.railway.app/todos/${_id}`, {
+    fetch(`${apiUrl}todos/${_id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

@@ -3,6 +3,7 @@ import { Box, Typography, Container, TextField, Button } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 interface RegisterFormData {
   username: string;
@@ -23,7 +24,7 @@ const RegisterView = () => {
   const handleRegister: SubmitHandler<RegisterFormData> = (data) => {
     console.log("Sending registration request...");
 
-    fetch("https://todo-appts-production.up.railway.app/register", {
+    fetch(`${apiUrl}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
