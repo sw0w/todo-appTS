@@ -23,7 +23,7 @@ const RegisterView = () => {
   const handleRegister: SubmitHandler<RegisterFormData> = (data) => {
     console.log("Sending registration request...");
 
-    fetch("http://localhost:5000/register", {
+    fetch("https://todo-appts-production.up.railway.app/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

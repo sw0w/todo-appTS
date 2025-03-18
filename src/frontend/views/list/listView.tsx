@@ -37,12 +37,15 @@ const ListView = () => {
           return;
         }
 
-        const response = await fetch("http://localhost:5000/todos/", {
-          method: "GET",
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
+        const response = await fetch(
+          "https://todo-appts-production.up.railway.app/todos/",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           console.error("Failed to fetch todos");
@@ -86,17 +89,20 @@ const ListView = () => {
           return;
         }
 
-        const response = await fetch(`http://localhost:5000/todos/${_id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`,
-          },
-          body: JSON.stringify({
-            todo: temp.text,
-            completed: false,
-          }),
-        });
+        const response = await fetch(
+          `https://todo-appts-production.up.railway.app/todos/${_id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Token ${token}`,
+            },
+            body: JSON.stringify({
+              todo: temp.text,
+              completed: false,
+            }),
+          }
+        );
 
         if (!response.ok) {
           console.error("Failed to save todo to the server.");
@@ -132,7 +138,7 @@ const ListView = () => {
       return;
     }
 
-    fetch(`http://localhost:5000/todos/${_id}`, {
+    fetch(`https://todo-appts-production.up.railway.app/todos/${_id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

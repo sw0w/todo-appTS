@@ -35,7 +35,7 @@ const ProfileView = () => {
     if (uid) {
       console.log(`Fetching data for user ID: ${uid}`);
 
-      fetch(`http://localhost:5000/users/${uid}`, {
+      fetch(`https://todo-appts-production.up.railway.app/users/${uid}`, {
         method: "GET",
         headers: {
           Authorization: `Token ${token}`,
