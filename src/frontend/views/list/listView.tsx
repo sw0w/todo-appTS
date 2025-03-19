@@ -38,7 +38,7 @@ const ListView = () => {
           return;
         }
 
-        const response = await fetch("`${apiUrl}todos/", {
+        const response = await fetch("`${apiUrl}/todos/", {
           method: "GET",
           headers: {
             Authorization: `Token ${token}`,
@@ -87,7 +87,7 @@ const ListView = () => {
           return;
         }
 
-        const response = await fetch(`${apiUrl}todos/${_id}`, {
+        const response = await fetch(`${apiUrl}/todos/${_id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
