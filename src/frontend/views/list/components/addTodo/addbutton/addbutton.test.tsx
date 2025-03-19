@@ -7,6 +7,7 @@ import {
   afterEach,
   afterAll,
 } from "vitest";
+import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import TodoInput from "./addbutton";
@@ -18,19 +19,22 @@ interface TodoData {
 }
 
 export const server = setupServer(
-  http.post("https://dummyjson.com/todos/add", async ({ request }) => {
-    const data = ((await request.json()) as TodoData) || null;
-    if (data) {
-      return HttpResponse.json({
-        todo: data.todo,
-        completed: false,
-        userId: 5,
-      });
-    } else {
-      console.log("Invalid data", data);
-      return HttpResponse.json({ error: "Invalid data" }, { status: 400 });
+  http.post(
+    "https://todo-backend-production-80c9.up.railway.app/todos/add",
+    async ({ request }) => {
+      const data = ((await request.json()) as TodoData) || null;
+      if (data) {
+        return HttpResponse.json({
+          todo: data.todo,
+          completed: false,
+          userId: 5,
+        });
+      } else {
+        console.log("Invalid data", data);
+        return HttpResponse.json({ error: "Invalid data" }, { status: 400 });
+      }
     }
-  })
+  )
 );
 
 beforeAll(() => server.listen());

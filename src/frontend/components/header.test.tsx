@@ -2,6 +2,7 @@ import { it, expect, describe } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Header from "./header";
+import "@testing-library/jest-dom";
 
 describe("header links testing", () => {
   it("header links while logged off", () => {

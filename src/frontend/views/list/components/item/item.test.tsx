@@ -1,4 +1,5 @@
 import TodoItem from "./item";
+import "@testing-library/jest-dom";
 import { it, expect, describe, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { setupServer } from "msw/node";
@@ -24,15 +25,18 @@ const itemProps: ItemProps = {
 };
 
 export const server = setupServer(
-  http.get("http://localhost:5000/todos", async () => {
-    return HttpResponse.json({
-      todos: [
-        { _id: 1, todo: "fly a plane", completed: false },
-        { _id: 2, todo: "ride a motorcycle", completed: true },
-        { _id: 3, todo: "roll down a mountain", completed: false },
-      ],
-    });
-  })
+  http.get(
+    "https://todo-backend-production-80c9.up.railway.app/todos",
+    async () => {
+      return HttpResponse.json({
+        todos: [
+          { _id: 1, todo: "fly a plane", completed: false },
+          { _id: 2, todo: "ride a motorcycle", completed: true },
+          { _id: 3, todo: "roll down a mountain", completed: false },
+        ],
+      });
+    }
+  )
 );
 
 beforeAll(() => server.listen());

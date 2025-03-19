@@ -2,6 +2,8 @@ import { it, expect, describe, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ContactView from "./contactView";
+import "@testing-library/jest-dom";
+
 import { BrowserRouter, useLocation } from "react-router-dom";
 
 vi.mock("react-router-dom", async () => {

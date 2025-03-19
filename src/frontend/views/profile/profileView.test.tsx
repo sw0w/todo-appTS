@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
+import "@testing-library/jest-dom";
 import { vi } from "vitest";
 import ProfileView from "./profileView";
 
