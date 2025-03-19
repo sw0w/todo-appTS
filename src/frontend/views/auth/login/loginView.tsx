@@ -21,7 +21,7 @@ const LoginView = () => {
   const handleLogin: SubmitHandler<LoginFormData> = (data) => {
     console.log("Sending login request with data:", data);
 
-    fetch(`${apiUrl}login`, {
+    fetch(`${apiUrl}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
